@@ -22,12 +22,13 @@ class Visitante:
     
 #============================================================================================================
 class Atraccion:
-    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola):
+    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: str, precio: float):
         self.nombre = nombre
         self.capacidad = capacidad
         self.duracion = duracion
         self.estado = True      #activo o fuera de servicio
         self.cola = []
+        self.precio = precio
 
     def iniciar_ronda(self):
         if self.estado == True:
@@ -84,8 +85,8 @@ class Atraccion_Infantil(Atraccion):
 
 #============================================================================================================
 class Monatanha_Rusa(Atraccion):
-    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola, velocidad_maxima: int, altura_maxima: int, extension: int):
-        super().__init__(nombre, capacidad, duracion, estado, cola)
+    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola, precio: float, velocidad_maxima: int, altura_maxima: int, extension: int):
+        super().__init__(nombre, capacidad, duracion, estado, cola, precio)
         self.velocidad_maxima = velocidad_maxima
         self.altura_maxima = altura_maxima
         self.extension = extension
@@ -102,8 +103,8 @@ class Monatanha_Rusa(Atraccion):
 
 #Aqui finalizan las clases :P
 
-atraccion1 = Atraccion("Noria", 10, 10, True, None)
-atraccion2 = Atraccion("Tagada", 10, 10, True, None)
+atraccion1 = Atraccion("Noria", 10, 10, True, None, 10)
+atraccion2 = Atraccion("Tagada", 10, 10, True, None, 10)
 
 fantasilandia = Parque("Fantasilandia", atraccion2)
 
