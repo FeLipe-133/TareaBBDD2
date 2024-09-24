@@ -1,20 +1,27 @@
 from datetime import date
 
 class Visitante:
-    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets):
+    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[str]):
         self.nombre = nombre
         self.edad = edad
         self.altura = altura
         self.dinero = dinero
-        self.tickets = []
+        self.tickets = [str]
 
     def comprar_ticket(self, atraccion):
-        ...
+        if self.dinero >= atraccion.precio:
+            self.dinero -= atraccion.precio
+            self.tickets.append(atraccion.nombre)
+        else:
+            print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
     
     def entregar_ticket(self, atraccion):
         for ticket in self.tickets:
-            if ticket.atraccion == atraccion.nombre:
+            if ticket == atraccion.nombre:
                 self.tickets.remove(ticket)
+            else:
+                print(f"{self.nombre} no tiene el ticket para la atraccion {atraccion.nombre}.")
+    
 
     def hacer_cola(self, atraccion):
         atraccion.cola.append(self.nombre)
@@ -22,12 +29,12 @@ class Visitante:
     
 #============================================================================================================
 class Atraccion:
-    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: str, precio: float):
+    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: list[str], precio: float):
         self.nombre = nombre
         self.capacidad = capacidad
         self.duracion = duracion
         self.estado = True      #activo o fuera de servicio
-        self.cola = []
+        self.cola = [str]
         self.precio = precio
 
     def iniciar_ronda(self):
@@ -58,7 +65,7 @@ class Ticket:
 #============================================================================================================
 
 class Parque:
-    def __init__(self, nombre: str, juegos: Atraccion):
+    def __init__(self, nombre: str, juegos: list[Atraccion]):
         self.nombre = nombre
         self.juegos = []
 
@@ -77,10 +84,10 @@ class Parque:
 class Atraccion_Infantil(Atraccion):
     def verificar_restricciones(self, visitante: Visitante):
         if visitante.edad > 10:
-            print(f"El {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que excede la edad limite.")
+            print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que excede la edad limite.")
             return False
         else:
-            print(f"El {visitante.nombre} puede acceder a la atraccion {self.nombre}")
+            print(f"El visitante {visitante.nombre} puede acceder a la atraccion {self.nombre}")
             return True
 
 #============================================================================================================
@@ -93,18 +100,22 @@ class Monatanha_Rusa(Atraccion):
 
     def verificar_restricciones(self, visitante: Visitante):    
         if visitante.altura < 140:
-            print(f"El {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que no cumple con la altura minima.")
+            print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que no cumple con la altura minima.")
             return False
         else:
-            print(f"El {visitante.nombre} puede acceder a la atraccion {self.nombre}")
+            print(f"El visitante {visitante.nombre} puede acceder a la atraccion {self.nombre}")
             return True
 
 #============================================================================================================
 
 #Aqui finalizan las clases :P
+visitante1 = Visitante("Felipe", 19, 130, 30.2, None)
 
-atraccion1 = Atraccion("Noria", 10, 10, True, None, 10)
-atraccion2 = Atraccion("Tagada", 10, 10, True, None, 10)
+atraccion1 = Atraccion("Noria", 10, 10, True, [None], 10)
+montanha = Monatanha_Rusa("Montanha Rusa", 15, 10, True, [None], 10, 100, 30, 200)
+infantil = Atraccion_Infantil("Infantil", 20, 10, True, [None], 20)
 
-fantasilandia = Parque("Fantasilandia", atraccion2)
+fantasilandia = Parque("Fantasilandia", [atraccion1])
 
+Atraccion_Infantil.verificar_restricciones(infantil, visitante1)
+Monatanha_Rusa.verificar_restricciones(montanha, visitante1)
