@@ -7,7 +7,7 @@ class Visitante:
         self.altura = altura
         self.dinero = dinero
         self.tickets = tickets
-
+###
     def comprar_ticket(self, atraccion):
         if self.dinero >= atraccion.precio:
             self.dinero -= atraccion.precio
