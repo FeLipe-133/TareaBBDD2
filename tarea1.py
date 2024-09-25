@@ -68,7 +68,6 @@ class Ticket:
         self.fecha_compra = fecha_compra
 
 #============================================================================================================
-
 class Parque:
     def __init__(self, nombre: str, juegos: list[Atraccion]):
         self.nombre = nombre
@@ -82,8 +81,7 @@ class Parque:
     def cobrar_ticket(self, visitante: Visitante, atraccion: Atraccion):
         Visitante.comprar_ticket(visitante, atraccion)
 
-    #def resumen_de_ventas(self, dia):
-        
+    #def resumen_de_ventas(self, dia):       
 
 #============================================================================================================
 class Atraccion_Infantil(Atraccion):
@@ -112,15 +110,43 @@ class Monatanha_Rusa(Atraccion):
             return True
 
 #============================================================================================================
+class VisitanteVip(Visitante):
+    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[str]):
+        super().__init__(nombre, edad, altura, dinero, tickets)
+
+#============================================================================================================
 
 #Aqui finalizan las clases :P
-visitante1 = Visitante("Felipe", 19, 130, 30.2, [])
+#visitante_ejemplo = Visitante("Felipe", 19, 130, 30.2, [])
+#atraccion_ejemplo = Atraccion("Noria", 10, 10, True, [], 10)
 
-atraccion1 = Atraccion("Noria", 10, 10, True, [], 10)
-montanha = Monatanha_Rusa("Montanha Rusa", 15, 10, True, [], 10, 100, 30, 200)
-infantil = Atraccion_Infantil("Infantil", 20, 10, True, [], 20)
+#cree estas variables con chatgpt para q sea mas aleatorio :D
+visitante_felipe = Visitante("Felipe", 19, 172, 30.2, [])
+visitante_camila = Visitante("Camila", 22, 165, 50.0, [])
+visitante_juan = Visitante("Juan", 25, 180, 40.5, [])
+visitante_valentina = Visitante("Valentina", 21, 160, 35.7, [])
+visitante_javier = Visitante("Javier", 12, 120, 60.3, [])
+visitante_alejandra = Visitante("Alejandra", 18, 168, 25.8, [])
+visitante_martin = Visitante("Martin", 30, 182, 55.0, [])
+visitante_lucia = Visitante("Lucia", 24, 170, 45.9, [])
+visitante_diego = Visitante("Diego", 7, 105, 38.6, [])
+visitante_sophia = Visitante("Sophia", 20, 166, 32.1, [])
+visitante_antonio = Visitante("Antonio", 6, 100, 48.7, [])
+visitante_carolina = Visitante("Carolina", 23, 162, 37.5, [])
+visitante_pablo = Visitante("Pablo", 29, 177, 52.4, [])
+visitante_maria = Visitante("Maria", 9, 140, 29.3, [])
+visitante_roberto = Visitante("Roberto", 31, 135, 62.0, [])
 
-fantasilandia = Parque("Fantasilandia", [atraccion1])
+noria = Atraccion("Noria", 10, 10, True, [], 8.0)  
+carrusel = Atraccion("Carrusel", 8, 5, True, [], 6.0) 
+casa_del_terror = Atraccion("Casa del Terror", 6, 15, True, [], 14.4) 
+tirolesa = Atraccion("Tirolesa", 4, 5, True, [], 20.0)
+sillas_voladoras = Atraccion("Sillas Voladoras", 9, 7, True, [], 9.6)  
+barco_pirata = Atraccion("Barco Pirata", 10, 8, True, [], 12.0) 
+laberinto = Atraccion("Laberinto", 5, 10, True, [], 8.8) 
+torre_caida = Atraccion("Torre de Caída", 10, 10, True, [], 16.0)  
+mini_golf = Atraccion("Mini Golf", 8, 12, True, [], 7.2) 
+paseo_en_bote = Atraccion("Paseo en Bote", 6, 20, True, [], 11.2)  
 
-Atraccion_Infantil.verificar_restricciones(infantil, visitante1)
-Monatanha_Rusa.verificar_restricciones(montanha, visitante1)
+fantasilandia = Parque("Fantasilandia", [noria, carrusel, casa_del_terror, tirolesa, sillas_voladoras, torre_caida])
+divertilandia = Parque("Divertilandia", [barco_pirata, laberinto, torre_caida, mini_golf, paseo_en_bote, noria])
