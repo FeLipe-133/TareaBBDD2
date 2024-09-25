@@ -7,7 +7,7 @@ class Visitante:
         self.altura = altura
         self.dinero = dinero
         self.tickets = tickets
-###
+
     def comprar_ticket(self, atraccion):
         if self.dinero >= atraccion.precio:
             self.dinero -= atraccion.precio
@@ -38,7 +38,13 @@ class Atraccion:
 
     def iniciar_ronda(self):
         if self.estado == True:
-            ...
+            cont_cola = len(self.cola)
+            if cont_cola <= self.capacidad:
+                for _ in range(cont_cola):
+                    self.cola.pop(0)
+            else:
+                for _ in range(10):
+                    self.cola.pop(0)
         else:
             print(f"la atraccion {self.nombre} esta fuera de servicio")
 
@@ -74,10 +80,10 @@ class Parque:
                 print(f"el juego {atraccion} esta activo.")
 
     def cobrar_ticket(self, visitante: Visitante, atraccion: Atraccion):
-        ...
+        Visitante.comprar_ticket(visitante, atraccion)
 
-    def resumen_de_ventas(self, dia):
-        ...
+    #def resumen_de_ventas(self, dia):
+        
 
 #============================================================================================================
 class Atraccion_Infantil(Atraccion):
