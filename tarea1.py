@@ -6,7 +6,7 @@ class Visitante:
         self.edad = edad
         self.altura = altura
         self.dinero = dinero
-        self.tickets = [str]
+        self.tickets = tickets
 
     def comprar_ticket(self, atraccion):
         if self.dinero >= atraccion.precio:
@@ -16,12 +16,11 @@ class Visitante:
             print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
     
     def entregar_ticket(self, atraccion):
-        for ticket in self.tickets:
-            if ticket == atraccion.nombre:
-                self.tickets.remove(ticket)
-            else:
-                print(f"{self.nombre} no tiene el ticket para la atraccion {atraccion.nombre}.")
-    
+        if atraccion.nombre in self.tickets:
+            self.tickets.remove(atraccion.nombre)
+        else:
+            print(f"{self.nombre} no tiene el ticket para la atraccion {atraccion.nombre}.")
+
 
     def hacer_cola(self, atraccion):
         atraccion.cola.append(self.nombre)
@@ -34,7 +33,7 @@ class Atraccion:
         self.capacidad = capacidad
         self.duracion = duracion
         self.estado = True      #activo o fuera de servicio
-        self.cola = [str]
+        self.cola = cola
         self.precio = precio
 
     def iniciar_ronda(self):
@@ -60,19 +59,19 @@ class Ticket:
         self.numero = numero
         self.atraccion = atraccion
         self.precio = precio
-        self.fecha_compra = date
+        self.fecha_compra = fecha_compra
 
 #============================================================================================================
 
 class Parque:
     def __init__(self, nombre: str, juegos: list[Atraccion]):
         self.nombre = nombre
-        self.juegos = []
+        self.juegos = juegos
 
     def consultar_juegos_activos(self):
-        for atraccion in self.juegos: #hacer bien, consultar
+        for atraccion in self.juegos:
             if atraccion.estado == True:
-                ...
+                print(f"el juego {atraccion} esta activo.")
 
     def cobrar_ticket(self, visitante: Visitante, atraccion: Atraccion):
         ...
@@ -109,11 +108,11 @@ class Monatanha_Rusa(Atraccion):
 #============================================================================================================
 
 #Aqui finalizan las clases :P
-visitante1 = Visitante("Felipe", 19, 130, 30.2, None)
+visitante1 = Visitante("Felipe", 19, 130, 30.2, [])
 
-atraccion1 = Atraccion("Noria", 10, 10, True, [None], 10)
-montanha = Monatanha_Rusa("Montanha Rusa", 15, 10, True, [None], 10, 100, 30, 200)
-infantil = Atraccion_Infantil("Infantil", 20, 10, True, [None], 20)
+atraccion1 = Atraccion("Noria", 10, 10, True, [], 10)
+montanha = Monatanha_Rusa("Montanha Rusa", 15, 10, True, [], 10, 100, 30, 200)
+infantil = Atraccion_Infantil("Infantil", 20, 10, True, [], 20)
 
 fantasilandia = Parque("Fantasilandia", [atraccion1])
 
