@@ -137,8 +137,21 @@ class Parque:
         self.venta_total += ticket.precio
         self.ventas.append(ticket)
 
-    def resumen_de_ventas(self, dia)-> None:
-        ...
+    def resumen_de_ventas(self, dia: date)-> None:
+        ingresos_por_atraccion = {}
+        for venta in self.ventas:
+            if venta.atraccion not in ingresos_por_atraccion:
+                ingresos_por_atraccion[venta.atraccion] = {'tickets': 0, 'ingresos': 0.0}
+
+            ingresos_por_atraccion[venta.atraccion]['tickets'] += 1
+            ingresos_por_atraccion[venta.atraccion]['ingresos'] += venta.precio
+        
+        for atraccion in ingresos_por_atraccion:
+            tickets_vendidos = ingresos_por_atraccion[atraccion]['tickets']
+            ingresos = ingresos_por_atraccion[atraccion]['ingresos']
+            print(f"Atracción: {atraccion}, Tickets vendidos: {tickets_vendidos}, Ingresos: {ingresos:.2f} USD")
+
+        print(f"Total de ingresos del día: {self.venta_total:.2f} USD")
 
 #============================================================================================================
 
@@ -158,6 +171,7 @@ fantasilandia = Parque("Fantasilandia", [noria, carrusel, casa_del_terror, tirol
 fantasilandia.consultar_juegos_activos()
 fantasilandia.cobrar_ticket(visitante_felipe, noria)
 visitante_felipe.entregar_ticket(noria)
+fantasilandia.resumen_de_ventas(date.today())
 
 # visitante_camila = Visitante("Camila", 22, 165, 50.0, [])
 # visitante_juan = Visitante("Juan", 25, 180, 40.5, [])
