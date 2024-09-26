@@ -38,8 +38,9 @@ class Visitante:
         print(f"{self.nombre} no tiene el ticket para la atraccion {atraccion.nombre}.")
 
     def hacer_cola(self, atraccion: 'Atraccion')-> None:
-        atraccion.cola.append(self.nombre)
-        print(f"{self.nombre} se ha puesto en la cola para la atraccion {atraccion.nombre}.")
+        if atraccion.estado:
+            atraccion.cola.append(self.nombre)
+            print(f"{self.nombre} se ha puesto en la cola para la atraccion {atraccion.nombre}.")
 
 #============================================================================================================
 class VisitanteVip(Visitante):
@@ -67,9 +68,13 @@ class Atraccion:
             cont_cola = len(self.cola)
             if cont_cola <= self.capacidad:
                 for _ in range(cont_cola):
+                    print(f"{self.cola[0]} entro en la atraccion {self.nombre}")
                     self.cola.pop(0)
-            else:
+            if cont_cola == 0:
+                print(f"no hay nadie en la cola para la atraccion {self.nombre}")
+            if cont_cola > self.capacidad:
                 for _ in range(self.capacidad):
+                    print(f"{self.cola[0]} entro en la atraccion {self.nombre}")
                     self.cola.pop(0)
         else:
             print(f"la atraccion {self.nombre} esta fuera de servicio")
@@ -164,13 +169,10 @@ class Parque:
 visitante_0 = Visitante("Felipe", 19, 172, 30.2, [], False)
 visitante_1 = Visitante("Camila", 22, 165, 50.0, [], False)
 visitante_2 = Visitante("Juan", 25, 180, 40.5, [], False)
-visitante_3 = Visitante("Valentina", 21, 160, 35.7, [], False)
-visitante_4 = Visitante("Javier", 12, 120, 60.3, [], False)
-visitante_5 = Visitante("Alejandra", 18, 168, 25.8, [], False)
 
-visitante_6 = Visitante("Diego", 7, 105, 38.6, [], False)
-visitante_7 = Visitante("Antonio", 6, 100, 48.7, [], False)
-visitante_8 = Visitante("Maria", 9, 110, 29.3, [], False)
+visitante_3 = Visitante("Diego", 7, 105, 38.6, [], False)
+visitante_4 = Visitante("Antonio", 6, 100, 48.7, [], False)
+visitante_5 = Visitante("Maria", 9, 110, 29.3, [], False)
 
 
 visitante_vip_1 = VisitanteVip("Alejandro", 25, 180, 50.0, [], True)
@@ -186,25 +188,40 @@ raptor = Montanha_Rusa("Raptor", 8, 12, True, [], 15.0, 80, 150, 500)
 
 fantasilandia = Parque("Fantasilandia", [noria, carrusel, torre_caida, infantil, raptor], 0, [])
 
-print(f"Bienvenido a {fantasilandia.nombre}, Los juegos que estan activos son los siguientes:")
+print(f"Bienvenido a {fantasilandia.nombre}, Los juegos que estan activos son los siguientes:\n")
 fantasilandia.consultar_juegos_activos()
 
-print(f"\n\nLos visitanes compran sus tickets para los juegos:")
+print(f"\n\nLos visitanes compran sus tickets para los juegos:\n")
 fantasilandia.cobrar_ticket(visitante_0, raptor)
-fantasilandia.cobrar_ticket(visitante_3, noria)
-fantasilandia.cobrar_ticket(visitante_vip_3, carrusel)
-fantasilandia.cobrar_ticket(visitante_0, carrusel)
 fantasilandia.cobrar_ticket(visitante_1, infantil)
 fantasilandia.cobrar_ticket(visitante_2, torre_caida)
-fantasilandia.cobrar_ticket(visitante_3, raptor)
+fantasilandia.cobrar_ticket(visitante_2, raptor)
+fantasilandia.cobrar_ticket(visitante_3, infantil)
 fantasilandia.cobrar_ticket(visitante_4, carrusel)
-fantasilandia.cobrar_ticket(visitante_5, raptor)
-fantasilandia.cobrar_ticket(visitante_6, infantil)
-fantasilandia.cobrar_ticket(visitante_7, infantil)
-fantasilandia.cobrar_ticket(visitante_8, carrusel)
+fantasilandia.cobrar_ticket(visitante_5, infantil)
 fantasilandia.cobrar_ticket(visitante_vip_1, carrusel)
 fantasilandia.cobrar_ticket(visitante_vip_2, raptor)
-fantasilandia.cobrar_ticket(visitante_vip_3, noria)
+fantasilandia.cobrar_ticket(visitante_vip_3, carrusel)
+
+print(f"\n\nLos visitanes van a hacer cola para la atraccion:\n")
+visitante_0.hacer_cola(raptor)
+visitante_1.hacer_cola(infantil)
+visitante_2.hacer_cola(torre_caida)
+visitante_2.hacer_cola(raptor)
+visitante_3.hacer_cola(infantil)
+visitante_4.hacer_cola(carrusel)
+visitante_5.hacer_cola(infantil)
+visitante_vip_1.hacer_cola(carrusel)
+visitante_vip_2.hacer_cola(raptor)
+visitante_vip_3.hacer_cola(carrusel)
+
+
+print(f"\n\nInicia la ronda de los juegos:\n")
+noria.iniciar_ronda()
+carrusel.iniciar_ronda()
+torre_caida.iniciar_ronda()
+infantil.iniciar_ronda()
+raptor.iniciar_ronda()
 
 
 
