@@ -17,7 +17,7 @@ class Visitante:
         self.dinero = dinero
         self.tickets = tickets
 
-    def comprar_ticket(self, atraccion):
+    def comprar_ticket(self, atraccion: 'Atraccion')-> None:
         if self.dinero >= atraccion.precio:
             self.dinero -= atraccion.precio
             ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
@@ -26,7 +26,7 @@ class Visitante:
         else:
             print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
     
-    def entregar_ticket(self, atraccion):
+    def entregar_ticket(self, atraccion: 'Atraccion')-> None:
         for ticket in self.tickets:
             if atraccion.nombre == ticket.atraccion:
                 print(f"{self.nombre} ha entregado su ticket para la atracción {atraccion.nombre}.")
@@ -34,7 +34,7 @@ class Visitante:
                 return
         print(f"{self.nombre} no tiene el ticket para la atraccion {atraccion.nombre}.")
 
-    def hacer_cola(self, atraccion):
+    def hacer_cola(self, atraccion: 'Atraccion')-> None:
         atraccion.cola.append(self.nombre)
         print(f"{self.nombre} se ha puesto en la cola para la atraccion {atraccion.nombre}.")
 
@@ -43,7 +43,7 @@ class VisitanteVip(Visitante):
     def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket]):
         super().__init__(nombre, edad, altura, dinero, tickets)
     
-    def comprar_ticket(self, atraccion):
+    def comprar_ticket(self, atraccion: 'Atraccion')-> None:
         ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
         self.tickets.append(ticket)
         print(f"El visitante {self.nombre} compro un ticket para {atraccion.nombre}")
@@ -58,7 +58,7 @@ class Atraccion:
         self.cola = cola
         self.precio = precio
 
-    def iniciar_ronda(self):
+    def iniciar_ronda(self)-> None:
         if self.estado == True:
             cont_cola = len(self.cola)
             if cont_cola <= self.capacidad:
@@ -70,18 +70,18 @@ class Atraccion:
         else:
             print(f"la atraccion {self.nombre} esta fuera de servicio")
 
-    def comenzar_mantenimiento(self):
+    def comenzar_mantenimiento(self)-> None:
         print(f"La atraccion {self.nombre} entra en mantenimiento")
         self.estado = False
 
-    def finalizar_mantenimiento(self):
+    def finalizar_mantenimiento(self)-> None:
         if self.estado == True:
             print(f"La atraccion {self.nombre} no estaba en mantenimiento")
         else:
             print(f"La atraccion {self.nombre} termina su mantenimiento")
             self.estado = True
         
-    def verificar_restricciones(self, visitante: Visitante)-> bool:
+    def verificar_restricciones(self, visitante: 'Visitante')-> bool:
         return True
 
 #============================================================================================================
@@ -89,7 +89,7 @@ class Atraccion_Infantil(Atraccion):
     def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: list[str], precio: float):
         super().__init__(nombre, capacidad, duracion, estado, cola, precio)
 
-    def verificar_restricciones(self, visitante: Visitante)-> bool:
+    def verificar_restricciones(self, visitante: 'Visitante')-> bool:
         if visitante.edad > 10:
             print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que excede la edad limite.")
             return False
@@ -99,13 +99,13 @@ class Atraccion_Infantil(Atraccion):
 
 #============================================================================================================
 class Montanha_Rusa(Atraccion):
-    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola, precio: float, velocidad_maxima: int, altura_maxima: int, extension: int):
+    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: list[str], precio: float, velocidad_maxima: int, altura_maxima: int, extension: int):
         super().__init__(nombre, capacidad, duracion, estado, cola, precio)
         self.velocidad_maxima = velocidad_maxima
         self.altura_maxima = altura_maxima
         self.extension = extension
 
-    def verificar_restricciones(self, visitante: Visitante)-> bool:    
+    def verificar_restricciones(self, visitante: 'Visitante')-> bool:    
         if visitante.altura < 140:
             print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que no cumple con la altura minima.")
             return False      
@@ -118,12 +118,12 @@ class Parque:
         self.nombre = nombre
         self.juegos = juegos
 
-    def consultar_juegos_activos(self):
+    def consultar_juegos_activos(self)-> None:
         for atraccion in self.juegos:
             if atraccion.estado == True:
                 print(f"el juego '{atraccion.nombre}' esta activo.")
 
-    def cobrar_ticket(self, visitante: Visitante, atraccion: Atraccion):
+    def cobrar_ticket(self, visitante: 'Visitante', atraccion: 'Atraccion')-> None:
         if atraccion.verificar_restricciones(visitante):
             visitante.comprar_ticket(atraccion)
 
