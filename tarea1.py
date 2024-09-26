@@ -17,11 +17,12 @@ class Visitante:
         self.dinero = dinero
         self.tickets = tickets
 
-    def comprar_ticket(self, atraccion: 'Atraccion')-> None:
+    def comprar_ticket(self, atraccion: 'Atraccion', parque: 'Parque')-> None:
         if self.dinero >= atraccion.precio:
             self.dinero -= atraccion.precio
             ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
             self.tickets.append(ticket)
+            parque.calcular_venta(ticket)
             print(f"El visitante {self.nombre} compro un ticket para {atraccion.nombre}")
         else:
             print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
@@ -43,9 +44,10 @@ class VisitanteVip(Visitante):
     def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket]):
         super().__init__(nombre, edad, altura, dinero, tickets)
     
-    def comprar_ticket(self, atraccion: 'Atraccion')-> None:
+    def comprar_ticket(self, atraccion: 'Atraccion', parque: 'Parque')-> None:
         ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
         self.tickets.append(ticket)
+        parque.calcular_venta(ticket)
         print(f"El visitante {self.nombre} compro un ticket para {atraccion.nombre}")
             
 #============================================================================================================
@@ -114,9 +116,11 @@ class Montanha_Rusa(Atraccion):
 
 #============================================================================================================
 class Parque:
-    def __init__(self, nombre: str, juegos: list[Atraccion]):
+    def __init__(self, nombre: str, juegos: list[Atraccion], venta_total: float, ventas: list[Ticket]):
         self.nombre = nombre
         self.juegos = juegos
+        self.venta_total = venta_total
+        self.ventas = ventas
 
     def consultar_juegos_activos(self)-> None:
         for atraccion in self.juegos:
@@ -125,9 +129,16 @@ class Parque:
 
     def cobrar_ticket(self, visitante: 'Visitante', atraccion: 'Atraccion')-> None:
         if atraccion.verificar_restricciones(visitante):
-            visitante.comprar_ticket(atraccion)
+            visitante.comprar_ticket(atraccion, self)
+            return
+        print(f"no se pudo comprar el ticket para la atraccion {atraccion.nombre}")
 
-    #def resumen_de_ventas(self, dia):       
+    def calcular_venta(self, ticket: 'Ticket')-> None:
+        self.venta_total += ticket.precio
+        self.ventas.append(ticket)
+
+    def resumen_de_ventas(self, dia)-> None:
+        ...
 
 #============================================================================================================
 
@@ -142,7 +153,7 @@ carrusel = Atraccion("Carrusel", 8, 5, True, [], 6.0)
 casa_del_terror = Atraccion("Casa del Terror", 6, 15, True, [], 14.4) 
 tirolesa = Atraccion("Tirolesa", 4, 5, False, [], 20.0)
 raptor = Montanha_Rusa("Raptor", 8, 120, True, [], 15.0, 80, 150, 500)
-fantasilandia = Parque("Fantasilandia", [noria, carrusel, casa_del_terror, tirolesa, raptor])
+fantasilandia = Parque("Fantasilandia", [noria, carrusel, casa_del_terror, tirolesa, raptor], 0, [])
 
 fantasilandia.consultar_juegos_activos()
 fantasilandia.cobrar_ticket(visitante_felipe, noria)
