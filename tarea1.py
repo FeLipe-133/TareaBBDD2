@@ -147,6 +147,7 @@ class Parque:
         self.ventas.append(ticket)
 
     def resumen_de_ventas(self, dia: date)-> None:
+        print(f"\nResumen de ventas\n")
         ingresos_por_atraccion = {}
         for venta in self.ventas:
             if venta.atraccion not in ingresos_por_atraccion:
@@ -158,9 +159,9 @@ class Parque:
         for atraccion in ingresos_por_atraccion:
             tickets_vendidos = ingresos_por_atraccion[atraccion]['tickets']
             ingresos = ingresos_por_atraccion[atraccion]['ingresos']
-            print(f"Atracción: {atraccion}, Tickets vendidos: {tickets_vendidos}, Ingresos: {ingresos:.2f} USD")
+            print(f"Atraccion: {atraccion}, Tickets vendidos: {tickets_vendidos}, Ingresos: {ingresos:.2f} USD")
 
-        print(f"Total de ingresos del día: {self.venta_total:.2f} USD")
+        print(f"\nTotal de ingresos del día: {self.venta_total:.2f} USD")
 
 #============================================================================================================
 
@@ -176,14 +177,14 @@ visitante_5 = Visitante("Maria", 9, 110, 29.3, [], False)
 
 
 visitante_vip_1 = VisitanteVip("Alejandro", 25, 180, 50.0, [], True)
-visitante_vip_2 = VisitanteVip("Sofía", 30, 165, 70.0, [], True)
+visitante_vip_2 = VisitanteVip("Sofia", 30, 165, 70.0, [], True)
 visitante_vip_3 = VisitanteVip("Leo", 21, 194, 57.0, [], True)
 
-noria = Atraccion("Noria", 10, 10, True, [], 8.0)  
-carrusel = Atraccion("Carrusel", 8, 5, True, [], 6.0)
-torre_caida = Atraccion("Torre de Caída", 10, 10, False, [], 16.0)  
+noria = Atraccion("Noria", 10, 10, True, [], 5.5)  
+carrusel = Atraccion("Carrusel", 8, 5, True, [], 7.0)
+torre_caida = Atraccion("Torre de Caida", 10, 10, False, [], 12.5)  
 
-infantil = Atraccion_Infantil("Atraccion Infantil", 10, 8, True, [], 5.0)
+infantil = Atraccion_Infantil("Atraccion Infantil", 10, 8, True, [], 2.5)
 raptor = Montanha_Rusa("Raptor", 8, 12, True, [], 15.0, 80, 150, 500)
 
 fantasilandia = Parque("Fantasilandia", [noria, carrusel, torre_caida, infantil, raptor], 0, [])
@@ -222,6 +223,44 @@ carrusel.iniciar_ronda()
 torre_caida.iniciar_ronda()
 infantil.iniciar_ronda()
 raptor.iniciar_ronda()
+
+
+print(f"\n\nSe reanudan los juegos:\n")
+torre_caida.finalizar_mantenimiento()
+
+print(f"\n\nLos visitanes compran sus tickets para los juegos:\n")
+fantasilandia.cobrar_ticket(visitante_0, noria)
+fantasilandia.cobrar_ticket(visitante_1, torre_caida)
+fantasilandia.cobrar_ticket(visitante_2, torre_caida)
+fantasilandia.cobrar_ticket(visitante_2, noria)
+fantasilandia.cobrar_ticket(visitante_3, torre_caida)
+fantasilandia.cobrar_ticket(visitante_4, torre_caida)
+fantasilandia.cobrar_ticket(visitante_5, noria)
+fantasilandia.cobrar_ticket(visitante_vip_1, raptor)
+fantasilandia.cobrar_ticket(visitante_vip_2, raptor)
+fantasilandia.cobrar_ticket(visitante_vip_3, raptor)
+
+print(f"\n\nLos visitanes van a hacer cola para la atraccion:\n")
+visitante_0.hacer_cola(noria)
+visitante_1.hacer_cola(torre_caida)
+visitante_2.hacer_cola(torre_caida)
+visitante_2.hacer_cola(noria)
+visitante_3.hacer_cola(torre_caida)
+visitante_4.hacer_cola(torre_caida)
+visitante_5.hacer_cola(noria)
+visitante_vip_1.hacer_cola(raptor)
+visitante_vip_2.hacer_cola(raptor)
+visitante_vip_3.hacer_cola(raptor)
+
+print(f"\n\nInicia la ronda de los juegos:\n")
+noria.iniciar_ronda()
+carrusel.iniciar_ronda()
+torre_caida.iniciar_ronda()
+infantil.iniciar_ronda()
+raptor.iniciar_ronda()
+
+#Resumen de ventas
+fantasilandia.resumen_de_ventas(date.today())
 
 
 
