@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Union
 
 #============================================================================================================
 class Ticket:
@@ -55,7 +54,7 @@ class Atraccion:
         self.nombre = nombre
         self.capacidad = capacidad
         self.duracion = duracion
-        self.estado = True      #activo o fuera de servicio
+        self.estado = estado      #activo o fuera de servicio
         self.cola = cola
         self.precio = precio
 
@@ -66,7 +65,7 @@ class Atraccion:
                 for _ in range(cont_cola):
                     self.cola.pop(0)
             else:
-                for _ in range(10):
+                for _ in range(self.capacidad):
                     self.cola.pop(0)
         else:
             print(f"la atraccion {self.nombre} esta fuera de servicio")
@@ -79,12 +78,18 @@ class Atraccion:
         if self.estado == True:
             print(f"La atraccion {self.nombre} no estaba en mantenimiento")
         else:
-            print(f"La atraccion {self.nombre} entra en mantenimiento")
+            print(f"La atraccion {self.nombre} termina su mantenimiento")
             self.estado = True
+        
+    def verificar_restricciones(self, visitante: Visitante)-> bool:
+        return True
 
 #============================================================================================================
 class Atraccion_Infantil(Atraccion):
-    def verificar_restricciones(self, visitante: Union[Visitante, VisitanteVip]):
+    def __init__(self, nombre: str, capacidad: int, duracion: int, estado: bool, cola: list[str], precio: float):
+        super().__init__(nombre, capacidad, duracion, estado, cola, precio)
+
+    def verificar_restricciones(self, visitante: Visitante)-> bool:
         if visitante.edad > 10:
             print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que excede la edad limite.")
             return False
@@ -100,27 +105,27 @@ class Montanha_Rusa(Atraccion):
         self.altura_maxima = altura_maxima
         self.extension = extension
 
-    def verificar_restricciones(self, visitante: Union[Visitante, VisitanteVip]):    
+    def verificar_restricciones(self, visitante: Visitante)-> bool:    
         if visitante.altura < 140:
             print(f"El visitante {visitante.nombre} no tiene permitido ingresar a la atraccion {self.nombre}, ya que no cumple con la altura minima.")
-            return False
-        else:
-            print(f"El visitante {visitante.nombre} puede acceder a la atraccion {self.nombre}")
-            return True
+            return False      
+        print(f"El visitante {visitante.nombre} puede acceder a la atraccion {self.nombre}")
+        return True
 
 #============================================================================================================
 class Parque:
-    def __init__(self, nombre: str, juegos: list[Union[Atraccion, Atraccion_Infantil, Montanha_Rusa]]):
+    def __init__(self, nombre: str, juegos: list[Atraccion]):
         self.nombre = nombre
         self.juegos = juegos
 
     def consultar_juegos_activos(self):
         for atraccion in self.juegos:
             if atraccion.estado == True:
-                print(f"el juego '{atraccion}' esta activo.")
+                print(f"el juego '{atraccion.nombre}' esta activo.")
 
-    def cobrar_ticket(self, visitante: Union[Visitante, VisitanteVip], atraccion: Atraccion):
-        visitante.comprar_ticket(atraccion)
+    def cobrar_ticket(self, visitante: Visitante, atraccion: Atraccion):
+        if atraccion.verificar_restricciones(visitante):
+            visitante.comprar_ticket(atraccion)
 
     #def resumen_de_ventas(self, dia):       
 
@@ -133,8 +138,13 @@ class Parque:
 #cree estas variables con chatgpt para q sea mas aleatorio :D
 visitante_felipe = Visitante("Felipe", 19, 172, 30.2, [])
 noria = Atraccion("Noria", 10, 10, True, [], 8.0)  
-fantasilandia = Parque("Fantasilandia", [noria])
+carrusel = Atraccion("Carrusel", 8, 5, True, [], 6.0) 
+casa_del_terror = Atraccion("Casa del Terror", 6, 15, True, [], 14.4) 
+tirolesa = Atraccion("Tirolesa", 4, 5, False, [], 20.0)
+raptor = Montanha_Rusa("Raptor", 8, 120, True, [], 15.0, 80, 150, 500)
+fantasilandia = Parque("Fantasilandia", [noria, carrusel, casa_del_terror, tirolesa, raptor])
 
+fantasilandia.consultar_juegos_activos()
 fantasilandia.cobrar_ticket(visitante_felipe, noria)
 visitante_felipe.entregar_ticket(noria)
 
