@@ -10,22 +10,24 @@ class Ticket:
 
 #============================================================================================================
 class Visitante:
-    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket]):
+    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket], vip_flag: bool):
         self.nombre = nombre
         self.edad = edad
         self.altura = altura
         self.dinero = dinero
         self.tickets = tickets
+        self.vip_flag = vip_flag
 
     def comprar_ticket(self, atraccion: 'Atraccion', parque: 'Parque')-> None:
-        if self.dinero >= atraccion.precio:
-            self.dinero -= atraccion.precio
-            ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
-            self.tickets.append(ticket)
-            parque.calcular_venta(ticket)
-            print(f"El visitante {self.nombre} compro un ticket para {atraccion.nombre}")
-        else:
-            print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
+        if atraccion.estado:
+            if self.dinero >= atraccion.precio:
+                self.dinero -= atraccion.precio
+                ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
+                self.tickets.append(ticket)
+                parque.calcular_venta(ticket)
+                print(f"El visitante {self.nombre} compro un ticket para {atraccion.nombre}")
+            else:
+                print(f"{self.nombre} no tiene el dinero suficiente para comprar el ticket.")
     
     def entregar_ticket(self, atraccion: 'Atraccion')-> None:
         for ticket in self.tickets:
@@ -41,8 +43,8 @@ class Visitante:
 
 #============================================================================================================
 class VisitanteVip(Visitante):
-    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket]):
-        super().__init__(nombre, edad, altura, dinero, tickets)
+    def __init__(self, nombre: str, edad: int, altura: int, dinero: float, tickets: list[Ticket], vip_flag: bool):
+        super().__init__(nombre, edad, altura, dinero, tickets, vip_flag)
     
     def comprar_ticket(self, atraccion: 'Atraccion', parque: 'Parque')-> None:
         ticket = Ticket(numero=len(self.tickets) + 1, atraccion=atraccion.nombre, precio=atraccion.precio, fecha_compra=date.today())
@@ -128,10 +130,12 @@ class Parque:
                 print(f"el juego '{atraccion.nombre}' esta activo.")
 
     def cobrar_ticket(self, visitante: 'Visitante', atraccion: 'Atraccion')-> None:
-        if atraccion.verificar_restricciones(visitante):
-            visitante.comprar_ticket(atraccion, self)
-            return
-        print(f"no se pudo comprar el ticket para la atraccion {atraccion.nombre}")
+        if atraccion.estado == True:
+            if atraccion.verificar_restricciones(visitante):
+                visitante.comprar_ticket(atraccion, self)
+                return
+        else:
+            print(f"{atraccion.nombre} no esta activa.")
 
     def calcular_venta(self, ticket: 'Ticket')-> None:
         self.venta_total += ticket.precio
@@ -157,32 +161,50 @@ class Parque:
 
 #Aqui finalizan las clases :P
 #cree estas variables con chatgpt para q sea mas aleatorio :D
-visitante_0 = Visitante("Felipe", 19, 172, 30.2, [])
-visitante_1 = Visitante("Camila", 22, 165, 50.0, [])
-visitante_2 = Visitante("Juan", 25, 180, 40.5, [])
-visitante_3 = Visitante("Valentina", 21, 160, 35.7, [])
-visitante_4 = Visitante("Javier", 12, 120, 60.3, [])
-visitante_5 = Visitante("Alejandra", 18, 168, 25.8, [])
-visitante_6 = Visitante("Martin", 30, 182, 55.0, [])
-visitante_7 = Visitante("Lucia", 24, 170, 45.9, [])
+visitante_0 = Visitante("Felipe", 19, 172, 30.2, [], False)
+visitante_1 = Visitante("Camila", 22, 165, 50.0, [], False)
+visitante_2 = Visitante("Juan", 25, 180, 40.5, [], False)
+visitante_3 = Visitante("Valentina", 21, 160, 35.7, [], False)
+visitante_4 = Visitante("Javier", 12, 120, 60.3, [], False)
+visitante_5 = Visitante("Alejandra", 18, 168, 25.8, [], False)
 
-visitante_8 = Visitante("Diego", 7, 105, 38.6, [])
-visitante_9 = Visitante("Antonio", 6, 100, 48.7, [])
-visitante_10 = Visitante("Maria", 9, 110, 29.3, [])
+visitante_6 = Visitante("Diego", 7, 105, 38.6, [], False)
+visitante_7 = Visitante("Antonio", 6, 100, 48.7, [], False)
+visitante_8 = Visitante("Maria", 9, 110, 29.3, [], False)
 
 
-visitante_vip_1 = VisitanteVip("Alejandro", 25, 180, 50.0, [])
-visitante_vip_2 = VisitanteVip("Sofía", 30, 165, 70.0, [])
-visitante_vip_3 = VisitanteVip("Leo", 21, 194, 57.0, [])
+visitante_vip_1 = VisitanteVip("Alejandro", 25, 180, 50.0, [], True)
+visitante_vip_2 = VisitanteVip("Sofía", 30, 165, 70.0, [], True)
+visitante_vip_3 = VisitanteVip("Leo", 21, 194, 57.0, [], True)
 
 noria = Atraccion("Noria", 10, 10, True, [], 8.0)  
 carrusel = Atraccion("Carrusel", 8, 5, True, [], 6.0)
-sillas_voladoras = Atraccion("Sillas Voladoras", 9, 7, True, [], 9.6)  
-barco_pirata = Atraccion("Barco Pirata", 10, 8, True, [], 12.0) 
-torre_caida = Atraccion("Torre de Caída", 10, 10, True, [], 16.0)  
+torre_caida = Atraccion("Torre de Caída", 10, 10, False, [], 16.0)  
 
 infantil = Atraccion_Infantil("Atraccion Infantil", 10, 8, True, [], 5.0)
 raptor = Montanha_Rusa("Raptor", 8, 12, True, [], 15.0, 80, 150, 500)
 
-fantasilandia = Parque("Fantasilandia", [noria, carrusel, sillas_voladoras, barco_pirata, torre_caida, infantil, raptor], 0, [])
+fantasilandia = Parque("Fantasilandia", [noria, carrusel, torre_caida, infantil, raptor], 0, [])
+
+print(f"Bienvenido a {fantasilandia.nombre}, Los juegos que estan activos son los siguientes:")
+fantasilandia.consultar_juegos_activos()
+
+print(f"\n\nLos visitanes compran sus tickets para los juegos:")
+fantasilandia.cobrar_ticket(visitante_0, raptor)
+fantasilandia.cobrar_ticket(visitante_3, noria)
+fantasilandia.cobrar_ticket(visitante_vip_3, carrusel)
+fantasilandia.cobrar_ticket(visitante_0, carrusel)
+fantasilandia.cobrar_ticket(visitante_1, infantil)
+fantasilandia.cobrar_ticket(visitante_2, torre_caida)
+fantasilandia.cobrar_ticket(visitante_3, raptor)
+fantasilandia.cobrar_ticket(visitante_4, carrusel)
+fantasilandia.cobrar_ticket(visitante_5, raptor)
+fantasilandia.cobrar_ticket(visitante_6, infantil)
+fantasilandia.cobrar_ticket(visitante_7, infantil)
+fantasilandia.cobrar_ticket(visitante_8, carrusel)
+fantasilandia.cobrar_ticket(visitante_vip_1, carrusel)
+fantasilandia.cobrar_ticket(visitante_vip_2, raptor)
+fantasilandia.cobrar_ticket(visitante_vip_3, noria)
+
+
 
